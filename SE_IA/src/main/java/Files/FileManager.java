@@ -13,10 +13,11 @@ public class FileManager {
      * Objeto para manejar el archivo de acceso aleatorio
      */
     protected RandomAccessFile randomAccessFile;
+
     /**
      * Longitud de registro
      */
-    int regLength;
+    protected int regLength;
 
     /**
      *
@@ -38,5 +39,13 @@ public class FileManager {
                 result[i] = this.randomAccessFile.readChar();
             }
         return String.valueOf(result);
+    }
+
+    public int getRegLength() {
+        return regLength;
+    }
+
+    public void setRegLength(int regLength) {
+        this.regLength = regLength;
     }
 }
