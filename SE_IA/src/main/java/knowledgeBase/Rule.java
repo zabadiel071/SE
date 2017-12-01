@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Rule {
     /**
      *
-      */
+     */
    private ArrayList<String> background;
 
     /**
