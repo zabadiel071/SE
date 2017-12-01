@@ -4,6 +4,7 @@ import knowledgeBase.KnowledgeBase;
 import knowledgeBase.Rule;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -48,4 +49,29 @@ public class Preload {
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     * @return representation of all mockup
+     */
+    public static String readAll(){
+        String s = "";
+        File file = new File("symptomsData");
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null){
+                s += line;
+                s += "\n";
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
 }
+
