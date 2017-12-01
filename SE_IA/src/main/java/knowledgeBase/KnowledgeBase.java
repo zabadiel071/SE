@@ -10,10 +10,6 @@ import java.util.ArrayList;
 public class KnowledgeBase extends FileManager {
 
     /**
-     *
-     */
-
-    /**
      * Total number of antecedents that a Rule can contain
      */
     private int totalAntecedents = 10;
@@ -25,18 +21,15 @@ public class KnowledgeBase extends FileManager {
 
     public ArrayList<Rule> rules;
 
-    /**
-     * @param fileName
-     * @throws FileNotFoundException
-     */
-    KnowledgeBase(String fileName) throws FileNotFoundException {
-        super(fileName);
-        index = new Index();
-    }
+    public int size = 0;
 
-  public KnowledgeBase() throws FileNotFoundException {
+  public KnowledgeBase() throws IOException {
       super("knowledge");
       index = new Index();
+      loadRules();
+      this.regLength = 4*Character.BYTES + 10 * (2*Character.BYTES);
+
+      size = (int)randomAccessFile.length()/regLength;
   }
 
   /**
@@ -146,22 +139,30 @@ public class KnowledgeBase extends FileManager {
         return false;
     }
 
-
+    /**
+     *
+     */
     public void loadRules(){
         this.rules = new ArrayList<Rule>();
         Rule r;
         String s;
-        for (int i =0; i < randomAccessFile.lenght; i++) {
-            r = new Rule();
-            r.setId(readString(2));
-            r.setConsequent(readString(2));
-            for (int i = 0; i < totalAntecedents; i++) {
-                s = readString(2);
-                if (s.equals("XX"))
-                    break;
-                r.getBackground().add(s);
+        try {
+            for (int i =0; i < size; i++) {
+                randomAccessFile.seek(i*regLength);
+                r = new Rule();
+                r.setId(readString(2));
+                r.setConsequent(readString(2));
+                for (int j = 0; j < totalAntecedents; j++) {
+                    s = readString(2);
+                    if (s.equals("XX")) {
+                        break;
+                    }
+                    r.getBackground().add(s);
+                }
+                this.rules.add(r);
             }
-            this.rules.add(r);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
