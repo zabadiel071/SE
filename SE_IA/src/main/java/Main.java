@@ -45,7 +45,10 @@ public class Main {
 
                         InferenceEngine engine = new InferenceEngine(new KnowledgeBase());
                         engine.setFact_base(l);
-                        engine.forwardChaining(s);
+                        if(engine.forwardChaining(s))
+                            System.out.println("JUSTIFICACION:\n" + engine.getJustification().print());
+                        else
+                            System.out.println("No se ingresaron los efectos necesarios para determinar una droga.");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -76,7 +79,7 @@ public class Main {
             symptoms.add(symp);
 
             System.out.println("¿Insert other? (Y/N)");
-            if (scanner.next().equals("Y"))
+            if (scanner.next().equals("N"))
                 exitFacts = true;
 
         }while (!exitFacts);

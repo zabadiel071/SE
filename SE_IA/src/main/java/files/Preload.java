@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 public class Preload {
     public static void main(String[] args) {
         try {
-            File file = new File("mockup");
+            File file = new File("RULES.txt");
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
@@ -56,7 +56,7 @@ public class Preload {
      */
     public static String readAll(){
         String s = "";
-        File file = new File("symptomsData");
+        File file = new File("Justification.txt");
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

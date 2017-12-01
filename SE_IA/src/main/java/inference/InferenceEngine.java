@@ -13,6 +13,8 @@ public class InferenceEngine {
 
     public InferenceEngine(KnowledgeBase kb){
         this.knowledgeBase = kb;
+        this.knowledgeBase.loadRules();
+        this.justification = new Justification();
     }
 
     /**
@@ -122,7 +124,7 @@ public class InferenceEngine {
            if (aux != null){
                if (Integer.parseInt(r.getId()) < Integer.parseInt(aux.getId()))
                    aux = r;
-           }
+           }else aux = r;
         }
         return aux;
     }
@@ -133,7 +135,7 @@ public class InferenceEngine {
      * @param fb
      */
     private void apply_update(Rule R, ArrayList<String> fb) {
-        fb.add(R.getConsequent());
+        fb.add(R.getConsequent()); justification.getFact_base().add(R.getConsequent());
     }
 
     public Justification getJustification() {
