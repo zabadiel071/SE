@@ -21,16 +21,14 @@ public class InferenceEngine {
      * @return boolean
      */
     public boolean forwardChaining(String goal){
-        ArrayList<Rule> R;
-        ArrayList<String> new_facts;
+        Rule R;
         conflictSet = new ArrayList<>();
-        conflictSet.add(this.knowledgeBase.readRule("1"));
+        conflictSet.add(this.knowledgeBase.readRule("01"));
         while(!exist(goal, fact_base) && !conflictSet.isEmpty()){
             conflictSet = equate(knowledgeBase.rules, fact_base);
             if(!conflictSet.isEmpty()){
                 R = solve(conflictSet);
-                new_facts = apply(R, fact_base);
-                update(fact_base, new_facts);
+                apply_update(R, fact_base);
             }
         }
         if(exist(goal, fact_base)){
@@ -88,7 +86,9 @@ public class InferenceEngine {
      * @param fact_base : ArrayList<String>
      * @return boolean
      */
-    private boolean exist(String goal, ArrayList<String> fact_base){ return false; }
+    private boolean exist(String goal, ArrayList<String> fact_base){
+        return fact_base.contains(goal);
+    }
 
     /**
      * Make equate between kb and fact_base
@@ -96,13 +96,40 @@ public class InferenceEngine {
      * @param fact_base : ArrayList<Rule>
      * @return ArrayList<Rule>
      */
-    private ArrayList<Rule> equate(ArrayList<Rule> kb, ArrayList<String> fact_base) { return null; }
+    private ArrayList<Rule> equate(ArrayList<Rule> kb, ArrayList<String> fact_base) {
+        ArrayList<Rule> resultRules = new ArrayList<>();
+        boolean isToAdd = true;
+        for (Rule r : kb){
+            for (String s : fact_base){
+                if (!r.getBackground().contains(s)){
+                    isToAdd = false;
+                }
+            }
+            if (isToAdd)
+                resultRules.add(r);
+        }
+        return resultRules;
+    }
 
-    private ArrayList<Rule> solve(ArrayList<Rule> cs) { return null; }
+    /**
+     *
+     * @param cs
+     * @return
+     */
+    private Rule solve(ArrayList<Rule> cs) {
+        Rule aux = null;
+        for(Rule r : cs){
+           if (aux != null){
+               if (Integer.parseInt(r.getId()) < Integer.parseInt(aux.getId()))
+                   aux = r;
+           }
+        }
+        return aux;
+    }
 
-    private ArrayList<String> apply(ArrayList<Rule> R, ArrayList<String> fb) { return null; }
-
-    private void update(ArrayList<String> fb, ArrayList<String> new_facts) { }
+    private void apply_update(Rule R, ArrayList<String> fb) {
+        fb.add(R.getConsequent());
+    }
 
     public Justification getJustification() {
         return justification;
