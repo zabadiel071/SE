@@ -1,9 +1,9 @@
-package KnowledgeBase;
+package knowledgeBase;
 
 import java.util.ArrayList;
 
 /**
- * Represents a Rule to be inferred and managed by the KnowledgeBase
+ * Represents a Rule to be inferred and managed by the knowledgeBase
  */
 public class Rule {
     /**
@@ -23,18 +23,18 @@ public class Rule {
 
     /**
      *
-     * @param background
-     * @param consequent
      * @param id
+     * @param consequent
+     * @param background
      */
-    public Rule(ArrayList<String> background, String consequent, String id) {
+    public Rule(String id , String consequent, ArrayList<String> background) {
         this.background = background;
         this.consequent = consequent;
         this.id = id;
     }
 
   public Rule() {
-
+        this.background = new ArrayList<String>();
   }
 
   /**
@@ -69,4 +69,13 @@ public class Rule {
     public void setId(String id) {
         this.id = id;
     }
+
+  @Override
+  public String toString() {
+    return "Rule{" +
+            "background=" + background +
+            ", consequent='" + consequent + '\'' +
+            ", id='" + id + '\'' +
+            '}';
+  }
 }

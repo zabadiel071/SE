@@ -1,10 +1,11 @@
-package KnowledgeBase;
+package knowledgeBase;
 
-import Files.FileManager;
-import Files.Index;
+import files.FileManager;
+import files.Index;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class KnowledgeBase extends FileManager {
 
@@ -16,24 +17,29 @@ public class KnowledgeBase extends FileManager {
     /**
      * Index file
      */
-    protected Index index;
+    public Index index;
 
-    /**
-     * @param fileName
-     * @throws FileNotFoundException
-     */
-    KnowledgeBase(String fileName) throws FileNotFoundException {
-        super(fileName);
-    }
+    public ArrayList<Rule> rules;
 
-    /**
+    public int size = 0;
+
+  public KnowledgeBase() throws IOException {
+      super("knowledge");
+      index = new Index();
+      loadRules();
+      this.regLength = 4*Character.BYTES + 10 * (2*Character.BYTES);
+
+      size = (int)randomAccessFile.length()/regLength;
+  }
+
+  /**
      * Inserts a new Rule register into knowledge database
      * @param rule
      * @return
      */
     public boolean insertRegister(Rule rule){
         try {
-            if (index.logicAddress(rule.getId()) != -1){
+            if (index.logicAddress(rule.getId()) == -1){
                 int logicalAddress = (int) randomAccessFile.length();
 
                 randomAccessFile.seek(randomAccessFile.length());
@@ -47,7 +53,6 @@ public class KnowledgeBase extends FileManager {
                 for (int i =0; i< aux; i++){ randomAccessFile.writeChars("XX"); }
 
                 randomAccessFile.seek(0);
-
                 index.insertRegister(rule.getId(), logicalAddress);
             }else {
                 return false;
@@ -63,7 +68,7 @@ public class KnowledgeBase extends FileManager {
    * @param id : String
    * @return Rule
    */
-    public Rule read(String id){
+    public Rule readRule(String id){
         int logicAddress = index.logicAddress(id);
         Rule rule = new Rule();
         if (logicAddress != -1){
@@ -71,9 +76,11 @@ public class KnowledgeBase extends FileManager {
                 randomAccessFile.seek(logicAddress);
                 rule.setId(readString(2));
                 rule.setConsequent(readString(2));
-              for (int i = 0; i < totalAntecedents ; i++) {
-                if(!readString(2).equals("XX"))
-                    rule.getBackground().add(readString(2));
+              for (int i = 0; i < totalAntecedents - 1; i++) {
+                  String s = readString(2);
+                  if(s.equals("XX"))
+                      break;
+                  rule.getBackground().add(s);
               }
               randomAccessFile.seek(0);
               return  rule;
@@ -130,5 +137,32 @@ public class KnowledgeBase extends FileManager {
             }
         }
         return false;
+    }
+
+    /**
+     *
+     */
+    public void loadRules(){
+        this.rules = new ArrayList<Rule>();
+        Rule r;
+        String s;
+        try {
+            for (int i =0; i < size; i++) {
+                randomAccessFile.seek(i*regLength);
+                r = new Rule();
+                r.setId(readString(2));
+                r.setConsequent(readString(2));
+                for (int j = 0; j < totalAntecedents; j++) {
+                    s = readString(2);
+                    if (s.equals("XX")) {
+                        break;
+                    }
+                    r.getBackground().add(s);
+                }
+                this.rules.add(r);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
