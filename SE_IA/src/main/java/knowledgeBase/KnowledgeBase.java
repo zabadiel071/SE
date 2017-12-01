@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class KnowledgeBase extends FileManager {
-
+    private final int LENGHT_OF_ID = 2;
+    private final int LENTGH_OF_DATA = 4;
+    private final String NO_DATA = "XXXX";
     /**
      * Total number of antecedents that a Rule can contain
      */
@@ -23,11 +25,12 @@ public class KnowledgeBase extends FileManager {
 
     public int size = 0;
 
+
   public KnowledgeBase() throws IOException {
       super("knowledge");
       index = new Index();
       loadRules();
-      this.regLength = 4*Character.BYTES + 10 * (2*Character.BYTES);
+      this.regLength = 6*Character.BYTES + 10 * (4*Character.BYTES);
 
       size = (int)randomAccessFile.length()/regLength;
   }
@@ -50,7 +53,7 @@ public class KnowledgeBase extends FileManager {
                 for(String s : rule.getBackground()){
                     randomAccessFile.writeChars(s);
                 }
-                for (int i =0; i< aux; i++){ randomAccessFile.writeChars("XX"); }
+                for (int i =0; i< aux; i++){ randomAccessFile.writeChars(NO_DATA); }
 
                 randomAccessFile.seek(0);
                 index.insertRegister(rule.getId(), logicalAddress);
@@ -74,11 +77,11 @@ public class KnowledgeBase extends FileManager {
         if (logicAddress != -1){
             try{
                 randomAccessFile.seek(logicAddress);
-                rule.setId(readString(2));
-                rule.setConsequent(readString(2));
+                rule.setId(readString(LENGHT_OF_ID));
+                rule.setConsequent(readString(LENTGH_OF_DATA));
               for (int i = 0; i < totalAntecedents - 1; i++) {
-                  String s = readString(2);
-                  if(s.equals("XX"))
+                  String s = readString(LENTGH_OF_DATA);
+                  if(s.equals(NO_DATA))
                       break;
                   rule.getBackground().add(s);
               }
@@ -108,7 +111,7 @@ public class KnowledgeBase extends FileManager {
             randomAccessFile.writeChars(s);
           }
           for(int i = 0; i<aux; i++){
-              randomAccessFile.writeChars("XX");
+              randomAccessFile.writeChars(NO_DATA);
           }
           randomAccessFile.seek(0);
           return true;
@@ -129,7 +132,7 @@ public class KnowledgeBase extends FileManager {
         if(logicalAddress != -1){
             try {
                 randomAccessFile.seek(logicalAddress);
-                randomAccessFile.writeChars("XX");
+                randomAccessFile.writeChars("00");
                 randomAccessFile.seek(0);
                 return true;
             } catch (IOException e) {
@@ -140,7 +143,7 @@ public class KnowledgeBase extends FileManager {
     }
 
     /**
-     *
+     * Load all rules from the knowledge base
      */
     public void loadRules(){
         this.rules = new ArrayList<Rule>();
@@ -150,11 +153,11 @@ public class KnowledgeBase extends FileManager {
             for (int i =0; i < size; i++) {
                 randomAccessFile.seek(i*regLength);
                 r = new Rule();
-                r.setId(readString(2));
-                r.setConsequent(readString(2));
+                r.setId(readString(LENGHT_OF_ID));
+                r.setConsequent(readString(LENTGH_OF_DATA));
                 for (int j = 0; j < totalAntecedents; j++) {
-                    s = readString(2);
-                    if (s.equals("XX")) {
+                    s = readString(LENTGH_OF_DATA);
+                    if (s.equals(NO_DATA)) {
                         break;
                     }
                     r.getBackground().add(s);
@@ -165,4 +168,5 @@ public class KnowledgeBase extends FileManager {
             e.printStackTrace();
         }
     }
+
 }
