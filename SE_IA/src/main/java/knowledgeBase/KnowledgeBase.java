@@ -5,8 +5,13 @@ import files.Index;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class KnowledgeBase extends FileManager {
+
+    /**
+     *
+     */
 
     /**
      * Total number of antecedents that a Rule can contain
@@ -68,7 +73,7 @@ public class KnowledgeBase extends FileManager {
    * @param id : String
    * @return Rule
    */
-    public Rule read(String id){
+    public Rule readRule(String id){
         int logicAddress = index.logicAddress(id);
         Rule rule = new Rule();
         if (logicAddress != -1){
@@ -137,5 +142,10 @@ public class KnowledgeBase extends FileManager {
             }
         }
         return false;
+    }
+
+
+    public ArrayList<Rule> getRules(){
+        return null;
     }
 }
