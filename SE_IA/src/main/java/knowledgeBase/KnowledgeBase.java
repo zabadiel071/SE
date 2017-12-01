@@ -1,7 +1,7 @@
-package KnowledgeBase;
+package knowledgeBase;
 
-import Files.FileManager;
-import Files.Index;
+import files.FileManager;
+import files.Index;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class KnowledgeBase extends FileManager {
     /**
      * Index file
      */
-    protected Index index;
+    public Index index;
 
     /**
      * @param fileName
@@ -24,16 +24,22 @@ public class KnowledgeBase extends FileManager {
      */
     KnowledgeBase(String fileName) throws FileNotFoundException {
         super(fileName);
+        index = new Index();
     }
 
-    /**
+  public KnowledgeBase() throws FileNotFoundException {
+      super("knowledge");
+      index = new Index();
+  }
+
+  /**
      * Inserts a new Rule register into knowledge database
      * @param rule
      * @return
      */
     public boolean insertRegister(Rule rule){
         try {
-            if (index.logicAddress(rule.getId()) != -1){
+            if (index.logicAddress(rule.getId()) == -1){
                 int logicalAddress = (int) randomAccessFile.length();
 
                 randomAccessFile.seek(randomAccessFile.length());
@@ -47,7 +53,6 @@ public class KnowledgeBase extends FileManager {
                 for (int i =0; i< aux; i++){ randomAccessFile.writeChars("XX"); }
 
                 randomAccessFile.seek(0);
-
                 index.insertRegister(rule.getId(), logicalAddress);
             }else {
                 return false;
@@ -71,9 +76,11 @@ public class KnowledgeBase extends FileManager {
                 randomAccessFile.seek(logicAddress);
                 rule.setId(readString(2));
                 rule.setConsequent(readString(2));
-              for (int i = 0; i < totalAntecedents ; i++) {
-                if(!readString(2).equals("XX"))
-                    rule.getBackground().add(readString(2));
+              for (int i = 0; i < totalAntecedents - 1; i++) {
+                  String s = readString(2);
+                  if(s.equals("XX"))
+                      break;
+                  rule.getBackground().add(s);
               }
               randomAccessFile.seek(0);
               return  rule;
