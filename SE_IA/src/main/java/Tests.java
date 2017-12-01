@@ -17,13 +17,13 @@ public class Tests {
         background.add("E5");
 
 
-        Rule rule = new Rule("01","E1", background);
+        //Rule rule = new Rule("01","E1", background);
         //knowledgeBase.insertRegister(rule);
 
-        rule = new Rule("02","E7", background);
+//        rule = new Rule("02","E7", background);
         //knowledgeBase.insertRegister(rule);
 
-        rule = new Rule("03","E3", background);
+  //      rule = new Rule("03","E3", background);
         //knowledgeBase.insertRegister(rule);
 
         knowledgeBase.loadRules();
