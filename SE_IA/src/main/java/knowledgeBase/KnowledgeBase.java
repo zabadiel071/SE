@@ -23,6 +23,8 @@ public class KnowledgeBase extends FileManager {
      */
     public Index index;
 
+    public ArrayList<Rule> rules;
+
     /**
      * @param fileName
      * @throws FileNotFoundException
@@ -145,7 +147,21 @@ public class KnowledgeBase extends FileManager {
     }
 
 
-    public ArrayList<Rule> getRules(){
-        return null;
+    public void loadRules(){
+        this.rules = new ArrayList<Rule>();
+        Rule r;
+        String s;
+        for (int i =0; i < randomAccessFile.lenght; i++) {
+            r = new Rule();
+            r.setId(readString(2));
+            r.setConsequent(readString(2));
+            for (int i = 0; i < totalAntecedents; i++) {
+                s = readString(2);
+                if (s.equals("XX"))
+                    break;
+                r.getBackground().add(s);
+            }
+            this.rules.add(r);
+        }
     }
 }
