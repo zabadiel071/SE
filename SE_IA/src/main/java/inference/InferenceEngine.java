@@ -112,9 +112,9 @@ public class InferenceEngine {
     }
 
     /**
-     *
-     * @param cs
-     * @return
+     * Solve the conflictSet
+     * @param cs : ArrayList<Rule>
+     * @return Rule
      */
     private Rule solve(ArrayList<Rule> cs) {
         Rule aux = null;
@@ -127,6 +127,11 @@ public class InferenceEngine {
         return aux;
     }
 
+    /**
+     * Apply and update the fact base
+     * @param R
+     * @param fb
+     */
     private void apply_update(Rule R, ArrayList<String> fb) {
         fb.add(R.getConsequent());
     }
