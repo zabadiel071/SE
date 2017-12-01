@@ -40,10 +40,11 @@ public class KnowledgeBase extends FileManager {
 
                 randomAccessFile.writeChars(rule.getId());
                 randomAccessFile.writeChars(rule.getConsequent());
-
+                int aux = totalAntecedents - rule.getBackground().size();
                 for(String s : rule.getBackground()){
                     randomAccessFile.writeChars(s);
                 }
+                for (int i =0; i< aux; i++){ randomAccessFile.writeChars("XX"); }
 
                 randomAccessFile.seek(0);
 
@@ -71,7 +72,8 @@ public class KnowledgeBase extends FileManager {
                 rule.setId(readString(2));
                 rule.setConsequent(readString(2));
               for (int i = 0; i < totalAntecedents ; i++) {
-                rule.getBackground().add(readString(2));
+                if(!readString(2).equals("XX"))
+                    rule.getBackground().add(readString(2));
               }
               randomAccessFile.seek(0);
               return  rule;
@@ -94,8 +96,12 @@ public class KnowledgeBase extends FileManager {
           randomAccessFile.seek(logicAddress);
           randomAccessFile.writeChars(rule.getId());
           randomAccessFile.writeChars(rule.getConsequent());
+          int aux = totalAntecedents - rule.getBackground().size();
           for (String s : rule.getBackground()) {
             randomAccessFile.writeChars(s);
+          }
+          for(int i = 0; i<aux; i++){
+              randomAccessFile.writeChars("XX");
           }
           randomAccessFile.seek(0);
           return true;
@@ -106,4 +112,23 @@ public class KnowledgeBase extends FileManager {
       return false;
     }
 
+    /**
+     * Delete a register
+     * @param id : String
+     * @return boolean
+     */
+    public boolean delete(String id){
+        int logicalAddress = index.logicAddress(id);
+        if(logicalAddress != -1){
+            try {
+                randomAccessFile.seek(logicalAddress);
+                randomAccessFile.writeChars("XX");
+                randomAccessFile.seek(0);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }
