@@ -32,7 +32,7 @@ public class Index extends FileManager{
      * @param key
      * @param logicAddress
      */
-    boolean insertRegister(String key, int logicAddress){
+    public boolean insertRegister(String key, int logicAddress){
         boolean insert = false;
         if (logicAddress(key) == -1){
             try{
@@ -53,7 +53,7 @@ public class Index extends FileManager{
      * @param key
      * @return
      */
-    private int logicAddress(String key){
+    public int logicAddress(String key){
         int logicAddress = -1;
         try {
             long nRegisters = randomAccessFile.length() / regLength;
