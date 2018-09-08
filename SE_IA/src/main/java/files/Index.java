@@ -5,7 +5,7 @@ import java.io.IOException;
 
 /**
  * Index file
- * Key is defined by char(2), are numbers
+ * Key is defined integer
  */
 public class Index extends FileManager{
 
@@ -15,16 +15,8 @@ public class Index extends FileManager{
      */
     public Index() throws FileNotFoundException {
         super("index");
-        this.regLength = 2*Character.BYTES + Integer.BYTES;
-    }
-
-    /**
-     *
-     * @param fileName
-     * @throws FileNotFoundException
-     */
-    private Index(String fileName) throws FileNotFoundException {
-        super(fileName);
+        //Int for position and int for id
+        registerLength = 2*Integer.BYTES;
     }
 
     /**
@@ -56,9 +48,9 @@ public class Index extends FileManager{
     public int logicAddress(String key){
         int logicAddress = -1;
         try {
-            long nRegisters = randomAccessFile.length() / regLength;
+            long nRegisters = randomAccessFile.length() / registerLength;
             for (int i = 0; i < nRegisters; i++){
-                randomAccessFile.seek(i*regLength);
+                randomAccessFile.seek(i*registerLength);
                 if (readString(2).equals(key)){
                     logicAddress = randomAccessFile.readInt();
                 }

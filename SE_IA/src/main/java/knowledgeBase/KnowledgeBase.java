@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class KnowledgeBase extends FileManager {
     private final int LENGHT_OF_ID = 2;
     private final int LENTGH_OF_DATA = 4;
@@ -30,9 +33,9 @@ public class KnowledgeBase extends FileManager {
       super("knowledge");
       index = new Index();
       loadRules();
-      this.regLength = 6*Character.BYTES + 10 * (4*Character.BYTES);
+      registerLength = 6*Character.BYTES + 10 * (4*Character.BYTES);
 
-      size = (int)randomAccessFile.length()/regLength;
+      size = (int)randomAccessFile.length()/registerLength;
   }
 
   /**
@@ -151,7 +154,7 @@ public class KnowledgeBase extends FileManager {
         String s;
         try {
             for (int i =0; i < size; i++) {
-                randomAccessFile.seek(i*regLength);
+                randomAccessFile.seek(i*registerLength);
                 r = new Rule();
                 r.setId(readString(LENGHT_OF_ID));
                 r.setConsequent(readString(LENTGH_OF_DATA));
