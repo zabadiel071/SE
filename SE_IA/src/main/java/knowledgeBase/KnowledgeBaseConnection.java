@@ -4,10 +4,13 @@ import files.Constants;
 import files.FileManager;
 import files.Index;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -106,7 +109,7 @@ public class KnowledgeBaseConnection extends FileManager{
             int i = 0;
             while (i < Constants.REGISTER_BACKGROUND) {
                 s = readString(Constants.GENRE_KEY_LENGTH);
-                if (s.equals(Constants.NO_DATA)) break;
+                if (s.charAt(0) == Character.MIN_VALUE) break;
                 rule.getBackground().add(s);
                 i++;
             }
@@ -196,4 +199,45 @@ public class KnowledgeBaseConnection extends FileManager{
         return Index.getInstance().logicAddress(id);
     }
 
+    public static void preloadRules(){
+        BufferedReader bufferedReader = null;
+        FileReader fileReader = null;
+
+        try {
+            fileReader = new FileReader("RULES.txt");
+            bufferedReader = new BufferedReader(fileReader);
+            String line;
+            Rule rule;
+            byte id;
+            String key;
+            ArrayList<String> background;
+            while ((line = bufferedReader.readLine()) != null){
+
+                StringTokenizer stringTokenizer = new StringTokenizer(line);
+                id = Byte.parseByte(stringTokenizer.nextToken());
+                key = stringTokenizer.nextToken();
+                background = new ArrayList<>();
+
+                while (stringTokenizer.hasMoreElements()){
+                    background.add(stringTokenizer.nextToken());
+                }
+
+                rule = new Rule(id,key,background);
+                KnowledgeBaseConnection.getINSTANCE().insert(rule);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        KnowledgeBaseConnection.getINSTANCE().preloadRules();
+        System.out.println(KnowledgeBaseConnection.getINSTANCE().get());
+    }
 }

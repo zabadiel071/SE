@@ -63,7 +63,7 @@ public class FileManager {
     public String formatString(String s, int length){
         String format = s.trim();
         while (format.length()<length)
-            format += 'X';
+            format += Character.MIN_VALUE;
         return format.substring(0,length);
     }
 
