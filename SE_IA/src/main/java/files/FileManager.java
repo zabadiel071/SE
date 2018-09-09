@@ -3,6 +3,7 @@ package files;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.StringReader;
 
 /**
  * Used to manage file operations
@@ -23,8 +24,15 @@ public class FileManager {
      * @param fileName
      * @throws FileNotFoundException
      */
-    public FileManager(String fileName) throws FileNotFoundException {
-        randomAccessFile = new RandomAccessFile(fileName,"rw");
+    public FileManager(String fileName) {
+        try {
+            randomAccessFile = new RandomAccessFile(fileName,"rw");
+            randomAccessFile.setLength(0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -40,6 +48,25 @@ public class FileManager {
         return String.valueOf(result);
     }
 
+    /**
+     * Sets all data in row equals to 0
+     * @param position
+     * @throws IOException
+     */
+    public void clearRegister(long position) throws IOException {
+        randomAccessFile.seek(position);
+        for (int i = 0; i < registerLength;i++){
+            randomAccessFile.writeByte(0);
+        }
+    }
+
+    public String formatString(String s, int length){
+        String format = s.trim();
+        while (format.length()<length)
+            format += 'X';
+        return format.substring(0,length);
+    }
+
     public int getRegLength() {
         return registerLength;
     }
@@ -48,3 +75,5 @@ public class FileManager {
         registerLength = regLength;
     }
 }
+
+

@@ -1,5 +1,4 @@
 package files;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -9,14 +8,17 @@ import java.io.IOException;
  */
 public class Index extends FileManager{
 
+    private static final Index INSTANCE = new Index();
+
+    public static Index getInstance(){return INSTANCE;}
+
     /**
      *
      * @throws FileNotFoundException
      */
-    public Index() throws FileNotFoundException {
+    private Index(){
         super("index");
-        //Int for position and int for id
-        registerLength = 2*Integer.BYTES;
+        registerLength = Constants.ID_LENGTH + Constants.POSITION_LENGTH;
     }
 
     /**
@@ -24,13 +26,13 @@ public class Index extends FileManager{
      * @param key
      * @param logicAddress
      */
-    public boolean insertRegister(String key, int logicAddress){
+    public boolean insertRegister(byte key, long logicAddress){
         boolean insert = false;
         if (logicAddress(key) == -1){
             try{
                 randomAccessFile.seek(randomAccessFile.length());
-                randomAccessFile.writeChars(key);
-                randomAccessFile.writeInt(logicAddress);
+                randomAccessFile.writeByte(key);
+                randomAccessFile.writeLong(logicAddress);
                 randomAccessFile.seek(0);
                 insert = true;
             }catch (IOException e){
@@ -45,14 +47,15 @@ public class Index extends FileManager{
      * @param key
      * @return
      */
-    public int logicAddress(String key){
-        int logicAddress = -1;
+    public long logicAddress(byte key){
+        long logicAddress = -1;
         try {
             long nRegisters = randomAccessFile.length() / registerLength;
             for (int i = 0; i < nRegisters; i++){
                 randomAccessFile.seek(i*registerLength);
-                if (readString(2).equals(key)){
-                    logicAddress = randomAccessFile.readInt();
+                byte foundKey = randomAccessFile.readByte();
+                if (foundKey == key){
+                    logicAddress = randomAccessFile.readLong();
                 }
             }
             randomAccessFile.seek(0);
@@ -62,6 +65,26 @@ public class Index extends FileManager{
         return logicAddress;
     }
 
+    /**
+     *
+     * @param key
+     */
+    public void delete(byte key) {
+        try {
+            long nRegisters = randomAccessFile.length() / registerLength;
+            for (int i = 0; i< nRegisters ; i++){
+                randomAccessFile.seek(i*registerLength);
+                byte foundKey = randomAccessFile.readByte();
+                if (foundKey == key){
+                    clearRegister(randomAccessFile.getFilePointer());
+                }
+            }
+            randomAccessFile.seek(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      *  Obtiene el archivo indice
