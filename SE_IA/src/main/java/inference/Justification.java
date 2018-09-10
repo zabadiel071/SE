@@ -3,6 +3,20 @@ package inference;
 import java.util.ArrayList;
 
 public class Justification {
+
+    /**
+     * Singleton
+     */
+    private static final Justification INSTANCE = new Justification();
+
+    /**
+     * Singleton
+     * @return
+     */
+    public static Justification getInstance() {
+        return INSTANCE;
+    }
+
     private ArrayList<String> fact_base = new ArrayList<>();
 
     public String print(){
