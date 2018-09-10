@@ -1,7 +1,7 @@
 package inference;
 
 import files.Constants;
-import knowledgeBase.KnowledgeBaseConnection;
+import knowledgeBase.KnowledgeBase;
 import knowledgeBase.Rule;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class InferenceEngine {
 
     public void init(){
         setUserFacts();
-        KnowledgeBaseConnection.preloadRules();
-        this.knowledgeBase = KnowledgeBaseConnection.getINSTANCE().get();
+        KnowledgeBase.preloadRules();
+        this.knowledgeBase = KnowledgeBase.getINSTANCE().get();
         forwardChaining();
     }
 

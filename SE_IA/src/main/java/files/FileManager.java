@@ -10,7 +10,7 @@ import java.io.StringReader;
  */
 public class FileManager {
     /**
-     * 
+     *
      */
     protected RandomAccessFile randomAccessFile;
 
