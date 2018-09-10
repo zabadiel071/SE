@@ -231,13 +231,4 @@ public class KnowledgeBaseConnection extends FileManager{
             e.printStackTrace();
         }
     }
-
-    /**
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        KnowledgeBaseConnection.getINSTANCE().preloadRules();
-        System.out.println(KnowledgeBaseConnection.getINSTANCE().get());
-    }
 }
