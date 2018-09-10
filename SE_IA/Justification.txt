@@ -1,0 +1,21 @@
+Depresion - 00e1
+Nauseas y Vomitos - 00e2
+Euforia - 00e3
+Amnesia - 00e4
+Descuido Personal - 00e5
+Gastritis - 00e6
+Panico - 00e7
+Alucinaciones - 00e8
+Psicosis - 00e9
+Tiempo de reaccion reducido - 0e10
+Deterioro dental - 0e11
+Perdida de Apetito - 0e12
+Inflamacion de las encias - 0e13
+Pupilas Dilatadas - 0e14
+Aumento de la Presion Sanguinea  - 0e15
+Demencia - 0e16
+Boca Reseca - 0e17
+Perdida de Peso - 0e18
+Convulsiones - 0e19
+Irritabilidad - 0e20
+Dano al Higado - 0e21

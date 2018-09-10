@@ -3,29 +3,36 @@ package files;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.StringReader;
 
 /**
- * @Clase para realizar control sobre archivos,
- * permite obtener un string, y crear un archivo con el nombre determinado
+ * Used to manage file operations
  */
 public class FileManager {
     /**
-     * Objeto para manejar el archivo de acceso aleatorio
+     * 
      */
     protected RandomAccessFile randomAccessFile;
 
     /**
-     * Longitud de registro
+     * 
      */
-    protected int regLength;
+    protected int registerLength;
 
     /**
      *
      * @param fileName
      * @throws FileNotFoundException
      */
-    public FileManager(String fileName) throws FileNotFoundException {
-        this.randomAccessFile = new RandomAccessFile(fileName,"rw");
+    public FileManager(String fileName) {
+        try {
+            randomAccessFile = new RandomAccessFile(fileName,"rw");
+            randomAccessFile.setLength(0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -36,16 +43,37 @@ public class FileManager {
     protected String readString(int length) throws IOException {
         char [] result = new char[length];
             for (int i = 0; i < length ; i++){
-                result[i] = this.randomAccessFile.readChar();
+                result[i] = randomAccessFile.readChar();
             }
         return String.valueOf(result);
     }
 
+    /**
+     * Sets all data in row equals to 0
+     * @param position
+     * @throws IOException
+     */
+    public void clearRegister(long position) throws IOException {
+        randomAccessFile.seek(position);
+        for (int i = 0; i < registerLength;i++){
+            randomAccessFile.writeByte(0);
+        }
+    }
+
+    public String formatString(String s, int length){
+        String format = s.trim();
+        while (format.length()<length)
+            format += Character.MIN_VALUE;
+        return format.substring(0,length);
+    }
+
     public int getRegLength() {
-        return regLength;
+        return registerLength;
     }
 
     public void setRegLength(int regLength) {
-        this.regLength = regLength;
+        registerLength = regLength;
     }
 }
+
+

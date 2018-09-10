@@ -17,9 +17,9 @@ public class Rule {
    private String consequent;
 
     /**
-     * Id char[2]
+     *
      */
-   private String id;
+   private byte id;
 
     /**
      *
@@ -27,7 +27,7 @@ public class Rule {
      * @param consequent
      * @param background
      */
-    public Rule(String id , String consequent, ArrayList<String> background) {
+    public Rule(byte id , String consequent, ArrayList<String> background) {
         this.background = background;
         this.consequent = consequent;
         this.id = id;
@@ -62,11 +62,11 @@ public class Rule {
         this.consequent = consequent;
     }
 
-    public String getId() {
+    public byte getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(byte id) {
         this.id = id;
     }
 
@@ -75,7 +75,7 @@ public class Rule {
     return "Rule{" +
             "background=" + background +
             ", consequent='" + consequent + '\'' +
-            ", id='" + id + '\'' +
+            ", id=" + id +
             '}';
   }
 }

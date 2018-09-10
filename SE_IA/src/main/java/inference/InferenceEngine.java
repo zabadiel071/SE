@@ -1,156 +1,108 @@
 package inference;
 
-import knowledgeBase.KnowledgeBase;
+import files.Constants;
+import knowledgeBase.KnowledgeBaseConnection;
 import knowledgeBase.Rule;
 
 import java.util.ArrayList;
 
 public class InferenceEngine {
-    private Justification justification;
-    private ArrayList<String> fact_base;
-    private ArrayList<Rule> conflictSet;
-    private KnowledgeBase knowledgeBase;
 
-    public InferenceEngine(KnowledgeBase kb){
-        this.knowledgeBase = kb;
-        this.knowledgeBase.loadRules();
-        this.justification = new Justification();
-    }
+    private ArrayList<String> userFacts = new ArrayList<>();
+    private ArrayList<Rule> knowledgeBase = new ArrayList<>();
+
+    private ArrayList<String> deducted = new ArrayList<>();
+    public ArrayList<String> factsBase = new ArrayList<>();
 
     /**
-     * Make inference using forwardChaining algorithm
-     * @param goal : String
-     * @return boolean
+     * Singleton
      */
-    public boolean forwardChaining(String goal){
-        Rule R;
-        conflictSet = new ArrayList<>();
-        conflictSet.add(this.knowledgeBase.readRule("01"));
-        while(!exist(goal, fact_base) && !conflictSet.isEmpty()){
-            conflictSet = equate(knowledgeBase.rules, fact_base);
-            if(!conflictSet.isEmpty()){
-                R = solve(conflictSet);
-                apply_update(R, fact_base);
-            }
-        }
-        if(exist(goal, fact_base)){
-            return true;
-        }
-        return false;
-    }
+    private static final InferenceEngine INSTANCE = new InferenceEngine();
 
     /**
-     * TODO
-     * @param goal
-     */
-    /*public boolean backwardChaining(String goal){
-        if(verify(goal, fact_base))
-            return true;
-        else
-            return false;
-
-    }*/
-
-    /**
-     * TODO
-     * @param goal
-     * @param fact_base
+     * Singleton
      * @return
      */
-    /*public boolean verify(String goal, ArrayList<String> fact_base){
-        ArrayList<Rule> R;
-        ArrayList<String> new_goals;
-        boolean verified = false;
-        if(exist(goal, getFact_base())){
-            return true;
-        }else{
-            conflictSet = equate(knowledgeBase.rules, goal);
-            while(!conflictSet.isEmpty() && !verified){
-                R = solve(conflictSet);
-                delete(R, conflictSet);
-                new_goals = get_antecedent(R), verified = true;
-                while(!new_goals.isEmpty() && verified){
-                    goal = selectGoal(new_goals);
-                    delete(goal, new_goals);
-                    verified = verify(goal, fact_base);
-                    if(verified)
-                        add(goal, fact_base);
+    public static InferenceEngine getInstance() {
+        return INSTANCE;
+    }
 
+    /**
+     * Temporal facts base to test
+     */
+    private void setUserFacts(){
+        userFacts.add("Blues");
+        userFacts.add("R&B");
+        userFacts.add("Gospel");
+        userFacts.add("BoogieWoogie");
+        userFacts.add("Jazz");
+        userFacts.add("Country");
+        //userFacts.add("Rockabilly");
+        //userFacts.add("Folk");
+        //userFacts.add("PostRock");
+        //userFacts.add("Postpunk");
+        //userFacts.add("GarageRock");
+        //userFacts.add("Indie");
+        //userFacts.add("PostGrunge");
+    }
+
+    public void init(){
+        setUserFacts();
+        KnowledgeBaseConnection.preloadRules();
+        this.knowledgeBase = KnowledgeBaseConnection.getINSTANCE().get();
+        forwardChaining();
+    }
+
+    private void forwardChaining(){
+        String output = Constants.INIT_STATE_NOT_FOUND;
+        String fact = "";
+        for (Rule rule: knowledgeBase){
+            deducted.clear();
+            ArrayList<String> currentFacts = (ArrayList<String>) userFacts.clone();
+            while (!currentFacts.isEmpty()){
+                for (String ruleBackground: rule.getBackground()){
+                    if (ruleBackground.contains(currentFacts.get(0))) {
+                        deducted.add(currentFacts.get(0));
+                        if (!factsBase.contains(currentFacts.get(0)))
+                            factsBase.add(currentFacts.get(0));
+                        if (!unifies(deducted,rule).equals(Constants.NOT_FOUND)){
+                            output = unifies(deducted,rule);
+                            fact = unifies(deducted,rule);
+                        }
+                    }
+                }
+                currentFacts.remove(0);
+            }
+            if (!fact.equals(Constants.NOT_FOUND) && !factsBase.contains(fact)){
+                update(fact);
+            }
+        }
+        System.out.println("Output result: "+output);
+        Justification.getInstance().setFact_base(factsBase);
+        System.out.println("Fact base: "+Justification.getInstance().print());
+    }
+
+    private String unifies(ArrayList<String> BC, Rule rule){
+        String data;
+        int elements = rule.getBackground().size();
+        int countElements = 0;
+        ArrayList<String> currentFacts = (ArrayList<String>) BC.clone();
+        while (!currentFacts.isEmpty()){
+            for (String ruleBackground: rule.getBackground()){
+                if (ruleBackground.contains(currentFacts.get(0))) {
+                    countElements++;
                 }
             }
-            return verified;
+            currentFacts.remove(0);
         }
-    }*/
-
-    /**
-     * Check if exist a goal in a fact base
-     * @param goal : String
-     * @param fact_base : ArrayList<String>
-     * @return boolean
-     */
-    private boolean exist(String goal, ArrayList<String> fact_base){
-        return fact_base.contains(goal);
+        if (countElements==elements)
+            data = rule.getConsequent();
+        else
+            data = Constants.NOT_FOUND;
+        return data;
     }
 
-    /**
-     * Make equate between kb and fact_base
-     * @param kb : ArrayList<Rule>
-     * @param fact_base : ArrayList<Rule>
-     * @return ArrayList<Rule>
-     */
-    private ArrayList<Rule> equate(ArrayList<Rule> kb, ArrayList<String> fact_base) {
-        ArrayList<Rule> resultRules = new ArrayList<>();
-        boolean isToAdd = true;
-        for (Rule r : kb){
-            for (String s : fact_base){
-                if (!r.getBackground().contains(s)){
-                    isToAdd = false;
-                }
-            }
-            if (isToAdd)
-                resultRules.add(r);
-        }
-        return resultRules;
-    }
-
-    /**
-     * Solve the conflictSet
-     * @param cs : ArrayList<Rule>
-     * @return Rule
-     */
-    private Rule solve(ArrayList<Rule> cs) {
-        Rule aux = null;
-        for(Rule r : cs){
-           if (aux != null){
-               if (Integer.parseInt(r.getId()) < Integer.parseInt(aux.getId()))
-                   aux = r;
-           }else aux = r;
-        }
-        return aux;
-    }
-
-    /**
-     * Apply and update the fact base
-     * @param R
-     * @param fb
-     */
-    private void apply_update(Rule R, ArrayList<String> fb) {
-        fb.add(R.getConsequent()); justification.getFact_base().add(R.getConsequent());
-    }
-
-    public Justification getJustification() {
-        return justification;
-    }
-
-    public void setJustification(Justification justification) {
-        this.justification = justification;
-    }
-
-    public ArrayList<String> getFact_base() {
-        return fact_base;
-    }
-
-    public void setFact_base(ArrayList<String> fact_base) {
-        this.fact_base = fact_base;
+    private void update(String fact){
+        factsBase.add(fact);
     }
 }
