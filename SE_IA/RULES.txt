@@ -1,5 +1,5 @@
-1 RockAndRoll Blues RhythmAndBlues Gospel BoogieWoogie Jazz Country
+1 RockAndRoll Blues R&B Gospel BoogieWoogie Jazz Country
 2 Alternative Punkrock Postpunk NewWave Hardcore Punk Indie
-3 ClassicRock Rockabilly Blues Folk Country RhythmAndBlues
+3 ClassicRock Rockabilly Blues Folk Country R&B
 4 PunkRock GarageRock HardRock PubRock ProtoPunk GlamRock
 5 ContemporaryRock Postpunk Indie PostRock PostGrunge GarageRock
