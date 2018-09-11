@@ -46,19 +46,19 @@ public class InferenceEngine {
         //userFacts.add("PostGrunge");
     }
 
-    public void init(){
-        setUserFacts();
+    public void init(ArrayList<String> facts){
+        //setUserFacts();
         KnowledgeBase.preloadRules();
         this.knowledgeBase = KnowledgeBase.getINSTANCE().get();
-        forwardChaining();
+        forwardChaining(facts);
     }
 
-    private void forwardChaining(){
+    private void forwardChaining(ArrayList<String> facts){
         String output = Constants.INIT_STATE_NOT_FOUND;
         String fact = "";
         for (Rule rule: knowledgeBase){
             deducted.clear();
-            ArrayList<String> currentFacts = (ArrayList<String>) userFacts.clone();
+            ArrayList<String> currentFacts = (ArrayList<String>) facts.clone();
             while (!currentFacts.isEmpty()){
                 for (String ruleBackground: rule.getBackground()){
                     if (ruleBackground.contains(currentFacts.get(0))) {

@@ -31,7 +31,13 @@ class MainScreen : View("Sistema experto"){
         add(backgroundText)
         vbox {
             button("Consulta") {
-                action { resultLabel.text = "Click" }
+                action {
+                    runAsync {
+
+                    }ui{
+
+                    }
+                }
             }
             add(resultLabel)
             add(justificationLabel)
