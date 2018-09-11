@@ -1,5 +1,7 @@
 package inference;
 
+import files.Constants;
+
 import java.util.ArrayList;
 
 public class JustificationModule {
@@ -33,13 +35,18 @@ public class JustificationModule {
 
     @Override
     public String toString() {
-        StringBuilder data = new StringBuilder("Dado que se presentaron los siguientes generos origen:\n");
-        for (Justification iterator: fact_base){
-            for (String ruleBackground: iterator.data){
-                data.append(ruleBackground).append(", ");
+        StringBuilder data = new StringBuilder();
+        if (!fact_base.isEmpty()) {
+            data.append("Dado que se presentaron los siguientes generos origen:\n");
+            for (Justification iterator : fact_base) {
+                for (String ruleBackground : iterator.data) {
+                    data.append(ruleBackground).append(", ");
+                }
+                data.append("\nSe puede inferir que el genero resultado es: ").append(iterator.type)
+                        .append(" que cumple con todas estas caracteristicas.\n\n");
             }
-            data.append("\nSe puede inferir que el genero resultado es: ").append(iterator.type)
-                    .append(" que cumple con todas estas caracteristicas.\n\n");
+        }else {
+            data.append(Constants.INIT_STATE_NOT_FOUND);
         }
         return data.toString();
     }

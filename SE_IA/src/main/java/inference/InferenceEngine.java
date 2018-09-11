@@ -80,6 +80,8 @@ public class InferenceEngine {
             }
         }
         //System.out.println("Output result: "+output);
+        if (output.equals(Constants.INIT_STATE_NOT_FOUND))
+            justifications.clear();
         JustificationModule.getInstance().setFact_base(justifications);
         System.out.println(JustificationModule.getInstance().toString());
     }
