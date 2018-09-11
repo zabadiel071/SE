@@ -81,7 +81,7 @@ public class InferenceEngine {
         }
         //System.out.println("Output result: "+output);
         JustificationModule.getInstance().setFact_base(justifications);
-        System.out.println(JustificationModule.getInstance().toString());
+        //System.out.println(JustificationModule.getInstance().toString());
     }
 
     private String unifies(ArrayList<String> BC, Rule rule){

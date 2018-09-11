@@ -1,8 +1,11 @@
 package app
 
+import inference.InferenceEngine
+import inference.JustificationModule
 import javafx.scene.Parent
 import tornadofx.*
 import utils.TextFileHandler
+import java.util.ArrayList
 
 class MainScreen : View("Sistema experto"){
     val fileHandler = TextFileHandler()
@@ -32,11 +35,11 @@ class MainScreen : View("Sistema experto"){
         vbox {
             button("Consulta") {
                 action {
+                    val list= ArrayList<String>(backgroundText.text.lines())
                     runAsync {
-
-                    }ui{
-
-                    }
+                        InferenceEngine.getInstance().init(list)
+                        JustificationModule.getInstance().toString()
+                    }ui { s: String -> justificationLabel.text = s}
                 }
             }
             add(resultLabel)
