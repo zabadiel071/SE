@@ -13,6 +13,7 @@ public class InferenceEngine {
 
     private ArrayList<String> deducted = new ArrayList<>();
     public ArrayList<String> factsBase = new ArrayList<>();
+    public ArrayList<Justification> justifications = new ArrayList<>();
 
     /**
      * Singleton
@@ -75,11 +76,12 @@ public class InferenceEngine {
             }
             if (!fact.equals(Constants.NOT_FOUND) && !factsBase.contains(fact)){
                 update(fact);
+                justifications.add(new Justification(rule.getConsequent(),rule.getBackground()));
             }
         }
-        System.out.println("Output result: "+output);
-        Justification.getInstance().setFact_base(factsBase);
-        System.out.println("Fact base: "+Justification.getInstance().print());
+        //System.out.println("Output result: "+output);
+        JustificationModule.getInstance().setFact_base(justifications);
+        System.out.println(JustificationModule.getInstance().toString());
     }
 
     private String unifies(ArrayList<String> BC, Rule rule){
