@@ -1,7 +1,7 @@
 package inference;
 
 import files.Constants;
-import knowledgeBase.KnowledgeBaseConnection;
+import knowledgeBase.KnowledgeBase;
 import knowledgeBase.Rule;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class InferenceEngine {
     private ArrayList<String> userFacts = new ArrayList<>();
     private ArrayList<Rule> knowledgeBase = new ArrayList<>();
 
-    private ArrayList<String> BC = new ArrayList<>();
+    private ArrayList<String> deducted = new ArrayList<>();
     public ArrayList<String> factsBase = new ArrayList<>();
 
     /**
@@ -46,40 +46,40 @@ public class InferenceEngine {
         //userFacts.add("PostGrunge");
     }
 
-    public void init(){
-        setUserFacts();
-        KnowledgeBaseConnection.preloadRules();
-        this.knowledgeBase = KnowledgeBaseConnection.getINSTANCE().get();
-        forwardChaining();
+    public void init(ArrayList<String> facts){
+        //setUserFacts();
+        KnowledgeBase.preloadRules();
+        this.knowledgeBase = KnowledgeBase.getINSTANCE().get();
+        forwardChaining(facts);
     }
 
-    private void forwardChaining(){
+    private void forwardChaining(ArrayList<String> facts){
         String output = Constants.INIT_STATE_NOT_FOUND;
         String fact = "";
         for (Rule rule: knowledgeBase){
-            BC.clear();
-            ArrayList<String> currentFacts = (ArrayList<String>) userFacts.clone();
+            deducted.clear();
+            ArrayList<String> currentFacts = (ArrayList<String>) facts.clone();
             while (!currentFacts.isEmpty()){
                 for (String ruleBackground: rule.getBackground()){
                     if (ruleBackground.contains(currentFacts.get(0))) {
-                        BC.add(currentFacts.get(0));
+                        deducted.add(currentFacts.get(0));
                         if (!factsBase.contains(currentFacts.get(0)))
                             factsBase.add(currentFacts.get(0));
-                        if (!unifies(BC,rule).equals(Constants.NOT_FOUND)){
-                            output = "El genero encontrado es "+ unifies(BC,rule);
-                            fact = unifies(BC,rule);
+                        if (!unifies(deducted,rule).equals(Constants.NOT_FOUND)){
+                            output = unifies(deducted,rule);
+                            fact = unifies(deducted,rule);
                         }
                     }
                 }
                 currentFacts.remove(0);
             }
             if (!fact.equals(Constants.NOT_FOUND) && !factsBase.contains(fact)){
-                factsBase.add(fact);
+                update(fact);
             }
         }
-        System.out.println(output);
+        System.out.println("Output result: "+output);
         Justification.getInstance().setFact_base(factsBase);
-        //System.out.println(Justification.getInstance().getFact_base().toString());
+        System.out.println("Fact base: "+Justification.getInstance().print());
     }
 
     private String unifies(ArrayList<String> BC, Rule rule){
@@ -100,5 +100,9 @@ public class InferenceEngine {
         else
             data = Constants.NOT_FOUND;
         return data;
+    }
+
+    private void update(String fact){
+        factsBase.add(fact);
     }
 }

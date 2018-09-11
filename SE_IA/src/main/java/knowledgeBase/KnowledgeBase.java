@@ -9,24 +9,23 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
  *
  */
-public class KnowledgeBaseConnection extends FileManager{
+public class KnowledgeBase extends FileManager{
 
     /**
      * Singleton
      */
-    private static final KnowledgeBaseConnection INSTANCE = new KnowledgeBaseConnection("knowledgeBase");
+    private static final KnowledgeBase INSTANCE = new KnowledgeBase("knowledgeBase");
 
     /**
      * @param fileName
      * @throws FileNotFoundException
      */
-    private KnowledgeBaseConnection(String fileName) {
+    private KnowledgeBase(String fileName) {
         super(fileName);
         registerLength = Constants.ID_LENGTH +
                 Constants.GENRE_KEY_BYTES_LENGTH +
@@ -37,7 +36,7 @@ public class KnowledgeBaseConnection extends FileManager{
      * Singleton
      * @return
      */
-    public static KnowledgeBaseConnection getINSTANCE() {
+    public static KnowledgeBase getINSTANCE() {
         return INSTANCE;
     }
 
@@ -223,7 +222,7 @@ public class KnowledgeBaseConnection extends FileManager{
                 }
 
                 rule = new Rule(id,key,background);
-                KnowledgeBaseConnection.getINSTANCE().insert(rule);
+                KnowledgeBase.getINSTANCE().insert(rule);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

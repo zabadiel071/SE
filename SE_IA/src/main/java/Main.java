@@ -1,11 +1,20 @@
 import inference.InferenceEngine;
 
+import java.util.ArrayList;
+
 public class Main {
     /**
      *
      * @param args
      */
     public static void main(String[] args) {
-        InferenceEngine.getInstance().init();
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Blues");
+        list.add("R&B");
+        list.add("Gospel");
+        list.add("BoogieWoogie");
+        list.add("Jazz");
+        list.add("Country");
+        InferenceEngine.getInstance().init(list);
     }
 }
