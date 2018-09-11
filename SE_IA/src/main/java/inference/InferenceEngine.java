@@ -49,6 +49,13 @@ public class InferenceEngine {
 
     public void init(ArrayList<String> facts){
         //setUserFacts();
+        userFacts.clear();
+        knowledgeBase.clear();
+        deducted.clear();
+        factsBase.clear();
+        justifications.clear();
+        
+        JustificationModule.getInstance().getFact_base().clear();
         KnowledgeBase.preloadRules();
         this.knowledgeBase = KnowledgeBase.getINSTANCE().get();
         forwardChaining(facts);

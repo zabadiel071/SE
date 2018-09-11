@@ -35,6 +35,7 @@ class MainScreen : View("Sistema experto"){
         vbox {
             button("Consulta") {
                 action {
+                    JustificationModule.getInstance().fact_base.clear()
                     val list= ArrayList<String>(backgroundText.text.lines())
                     runAsync {
                         InferenceEngine.getInstance().init(list)
