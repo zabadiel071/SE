@@ -83,7 +83,7 @@ public class InferenceEngine {
         if (output.equals(Constants.INIT_STATE_NOT_FOUND))
             justifications.clear();
         JustificationModule.getInstance().setFact_base(justifications);
-        System.out.println(JustificationModule.getInstance().toString());
+        //System.out.println(JustificationModule.getInstance().toString());
     }
 
     private String unifies(ArrayList<String> BC, Rule rule){

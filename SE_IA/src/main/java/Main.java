@@ -1,4 +1,5 @@
 import inference.InferenceEngine;
+import inference.JustificationModule;
 
 import java.util.ArrayList;
 
@@ -16,5 +17,7 @@ public class Main {
         list.add("Jazz");
         list.add("Country");
         InferenceEngine.getInstance().init(list);
+
+        JustificationModule.getInstance().toString();
     }
 }
